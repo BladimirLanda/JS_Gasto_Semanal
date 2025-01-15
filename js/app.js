@@ -36,7 +36,7 @@ class Presupuesto {
 //--//
 class InterfaceUser {
     insertarPresupuesto(cantidades) {
-        const {presupuesto, restante} = cantidades;
+        const { presupuesto, restante } = cantidades;
         document.querySelector('#total').textContent = presupuesto;
         document.querySelector('#restante').textContent = restante;
     }
@@ -65,18 +65,18 @@ class InterfaceUser {
         limpiarHtml(gastoListado);
 
         gastos.forEach(gasto => {
-            const {nombreGasto, cantidadGasto, id} = gasto;
+            const { nombreGasto, cantidadGasto, id } = gasto;
 
             const nuevoGasto = document.createElement('li');
             nuevoGasto.className = 'list-group-item d-flex justify-content-between align-items-center';
-            nuevoGasto.dataset.id = id; //.dateset: Establece el atributo 'data' y su tipo .tipo = 'data-tipo'.
+            nuevoGasto.dataset.id = id; //.dateset: Establece el atributo 'data' y su tipo '.tipo' = 'data-tipo'.
             nuevoGasto.innerHTML = `${nombreGasto} <span class="badge badge-primary badge-pill">$ ${cantidadGasto}</span>`;
 
             const btnBorrar = document.createElement('button');
             btnBorrar.innerHTML = 'Borrar &times;'
             btnBorrar.classList.add('btn', 'btn-danger', 'borrar-gasto');
             btnBorrar.onclick = () => {
-                eliminarGasto(id); //*
+                eliminarGasto(id); //Ambito Global
             }
 
             nuevoGasto.appendChild(btnBorrar);
@@ -91,7 +91,7 @@ class InterfaceUser {
 
     //<-->//
     comprobarPresupuesto(presupuestoObj) {
-        const {presupuesto, restante} = presupuestoObj;
+        const { presupuesto, restante } = presupuestoObj;
 
         //Comprobar 75%
         if(restante < presupuesto * 0.25) {
@@ -124,7 +124,7 @@ let presupuesto;
 cargarEventos();
 
 function cargarEventos() {
-    document.addEventListener('DOMContentLoaded', preguntarPresupuesto);
+    document.addEventListener('DOMContentLoaded', () => preguntarPresupuesto());
     formulario.addEventListener('submit', e => agregarGasto(e));
 }
 
@@ -180,7 +180,7 @@ function agregarGasto(e) {
     presupuesto.nuevoGasto(gasto);
     interfaceUser.imprimirAlerta('Gasto Agregado', 'correcto');
 
-    const {gastos, restante} = presupuesto;
+    const { gastos, restante } = presupuesto;
     interfaceUser.mostrarGastos(gastos);
     interfaceUser.actualizarRestante(restante);
     interfaceUser.comprobarPresupuesto(presupuesto);
@@ -190,10 +190,14 @@ function agregarGasto(e) {
 
 //--//
 function eliminarGasto(id) {
+    const alerta = document.querySelector('.alert');
+    alerta?.remove();
+
     presupuesto.eliminarGasto(id);
+
     interfaceUser.imprimirAlerta('Gasto Eliminado', 'exito');
 
-    const {gastos, restante} = presupuesto;
+    const { gastos, restante } = presupuesto;
     interfaceUser.mostrarGastos(gastos);
     interfaceUser.actualizarRestante(restante);
     interfaceUser.comprobarPresupuesto(presupuesto);
